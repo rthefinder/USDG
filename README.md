@@ -1,5 +1,7 @@
 # ONEGUARD ($USDG)
 
+<img width="1024" height="1024" alt="Gemini_Generated_Image_rwbid0rwbid0rwbi" src="https://github.com/user-attachments/assets/40661155-08d0-4e03-ab68-c91786711215" />
+
 **Security-First Launchpad for BONK-Style Coins on Solana**
 
 [![CI](https://github.com/your-org/oneguard/workflows/CI/badge.svg)](https://github.com/your-org/oneguard/actions)
@@ -45,6 +47,8 @@ ONEGUARD introduces a **strict, transparent launch standard** that makes these b
 - **No trust assumptions**
 - **Open-source verification**
 - **Creator constraints enforced by code**
+
+<img width="1024" height="1024" alt="Gemini_Generated_Image_1mxvoc1mxvoc1mxv" src="https://github.com/user-attachments/assets/eaa7ae12-a619-43f2-a9d5-707bad5fe04e" />
 
 ---
 
