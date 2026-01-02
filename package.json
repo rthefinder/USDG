@@ -1,0 +1,31 @@
+{
+  "name": "oneguard",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ONEGUARD ($USDG) - Security-first launchpad for BONK-style coins on Solana",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
+    "db:generate": "pnpm --filter @oneguard/db generate",
+    "db:push": "pnpm --filter @oneguard/db push",
+    "db:migrate": "pnpm --filter @oneguard/db migrate",
+    "anchor:build": "cd programs/oneguard && anchor build",
+    "anchor:test": "cd programs/oneguard && anchor test"
+  },
+  "devDependencies": {
+    "@turbo/gen": "^1.11.3",
+    "prettier": "^3.1.1",
+    "turbo": "^1.11.3",
+    "typescript": "^5.3.3"
+  },
+  "packageManager": "pnpm@8.15.1"
+}

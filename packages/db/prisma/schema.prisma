@@ -1,0 +1,138 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum LaunchPhase {
+  INITIALIZED
+  TRADING_RESTRICTED
+  TRADING_OPEN
+  FINALIZED
+}
+
+enum VerificationStatus {
+  PASS
+  WARN
+  FAIL
+}
+
+model Launch {
+  id              String        @id @default(cuid())
+  tokenMint       String        @unique
+  tokenName       String
+  tokenSymbol     String
+  tokenUri        String?
+  creator         String
+  
+  // Configuration stored as JSON
+  config          Json
+  
+  phase           LaunchPhase   @default(INITIALIZED)
+  
+  createdAt       DateTime      @default(now())
+  launchedAt      DateTime?
+  finalizedAt     DateTime?
+  
+  // Relations
+  purchases       Purchase[]
+  events          LaunchEvent[]
+  verification    Verification?
+  authorities     TokenAuthority?
+  
+  @@index([creator])
+  @@index([phase])
+  @@index([createdAt])
+}
+
+model Purchase {
+  id              String    @id @default(cuid())
+  launchId        String
+  wallet          String
+  amount          BigInt
+  timestamp       DateTime  @default(now())
+  txSignature     String    @unique
+  blockTime       DateTime?
+  slot            BigInt?
+  
+  launch          Launch    @relation(fields: [launchId], references: [id], onDelete: Cascade)
+  
+  @@index([launchId])
+  @@index([wallet])
+  @@index([timestamp])
+}
+
+model LaunchEvent {
+  id              String    @id @default(cuid())
+  launchId        String
+  signature       String    @unique
+  type            String
+  data            Json
+  timestamp       DateTime  @default(now())
+  blockTime       DateTime?
+  slot            BigInt?
+  
+  launch          Launch    @relation(fields: [launchId], references: [id], onDelete: Cascade)
+  
+  @@index([launchId])
+  @@index([type])
+  @@index([timestamp])
+}
+
+model TokenAuthority {
+  id                String    @id @default(cuid())
+  launchId          String    @unique
+  tokenMint         String    @unique
+  mintAuthority     String?
+  freezeAuthority   String?
+  verified          Boolean   @default(false)
+  checkedAt         DateTime  @default(now())
+  
+  launch            Launch    @relation(fields: [launchId], references: [id], onDelete: Cascade)
+  
+  @@index([tokenMint])
+}
+
+model Verification {
+  id                String              @id @default(cuid())
+  launchId          String              @unique
+  
+  antiSnipeStatus   VerificationStatus
+  antiSnipeChecks   Json
+  
+  antiBundleStatus  VerificationStatus
+  antiBundleChecks  Json
+  
+  antiRugStatus     VerificationStatus
+  antiRugChecks     Json
+  
+  overallStatus     VerificationStatus
+  
+  generatedAt       DateTime            @default(now())
+  verifiedBy        String
+  
+  launch            Launch              @relation(fields: [launchId], references: [id], onDelete: Cascade)
+  
+  @@index([overallStatus])
+  @@index([generatedAt])
+}
+
+model LaunchStats {
+  id                    String    @id @default(cuid())
+  launchId              String    @unique
+  
+  totalParticipants     Int       @default(0)
+  totalVolume           BigInt    @default(0)
+  averagePurchase       BigInt    @default(0)
+  topHolderPercentage   Float     @default(0)
+  
+  lastUpdated           DateTime  @default(now())
+  
+  @@index([launchId])
+}
